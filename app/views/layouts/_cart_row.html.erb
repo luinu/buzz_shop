@@ -1,0 +1,6 @@
+  <%= link_to cart_path do %>
+    <span class="fa fa-shopping-cart"></span>
+    <%= current_cart.line_items.map { |e| e.quantity }.sum %>
+    produktów za
+    <%= number_to_currency(current_cart.line_items.map { |e| e.full_price }.sum) %>
+  <% end %>

@@ -1,0 +1,56 @@
+class Admin::ProductsController < Admin::BaseController
+
+  def index
+    @q = Product.ransack(params[:q])
+    @products = @q.result(distinct: true).page(params[:page]).per(30)
+  end
+
+  def new
+    @product = Product.new
+    @product.build_stock
+  end
+
+  def create
+    @product = Product.new(product_params)
+    if @product.save
+      redirect_to admin_products_path, notice: "Pomyślnie dodano produkt."
+    else
+      render action: :new
+    end
+  end
+
+  def edit
+    @product = Product.find(params[:id])
+    @product.build_stock if @product.stock.nil?
+  end
+
+  def update
+    @product = Product.find(params[:id])
+    if @product.update_attributes(product_params)
+      redirect_to admin_products_path, notice: "Zmiany zostały zapisane"
+    else
+      render action: :edit
+    end
+  end
+  def destroy
+    @product = Product.find(params[:id])
+    @product.remove_photo!
+    @product.destroy
+    redirect_to admin_products_path, notice: "Produkt został usunięty"
+  end
+  private
+
+  def product_params
+    params.require(:product).permit(
+      :name,
+      :category_id,
+      :description,
+      :long_description,
+      :price,
+      :photo,
+      :stock_attributes => [
+        :quantity
+      ]
+    )
+  end
+end

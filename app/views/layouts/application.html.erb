@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Buzz</title>
+        <%= csrf_meta_tags %>
+        <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+        <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    </head>
+    <body>
+        <nav class="navbar navbar-default navbar-static-top">
+            <div>
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="<%= root_path %>">Buzz</a>
+                </div>
+                <ul class="nav navbar-nav">
+                  <li <% if [params[:controller], params[:action]] == ["products", "index"] %>class="active"<% end %>><%= link_to "Start", root_path %></li>
+                  <li <% if [params[:controller], params[:action]] == ["static", "privacy"] %>class="active"<% end %>><%= link_to "Polityka prywatności", privacy_path %></li>
+                  <li <% if [params[:controller], params[:action]] == ["static", "terms"] %>class="active"<% end %>><%= link_to "Regulamin", terms_path %></li>
+                  <li <% if [params[:controller], params[:action]] == ["static", "shipping"] %>class="active"<% end %>><%= link_to "Dostawa i płatności", shipping_path %></li>
+                  <li <% if [params[:controller], params[:action]] == ["static", "about"] %>class="active"<% end %>><%= link_to "O sklepie", about_path %></li>
+                </ul>
+                <ul class="nav navbar-nav nabar-right">
+                  <ul class="nav navbar-nav navbar-right">
+                    <% if user_signed_in? %>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Twoje konto <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><%= link_to "Zamówienia", orders_path(current_user) %></li>
+                        <li><%= link_to "Zarządzaj kontem", settings_path %></li>
+                        <li role="separator" class="divider"></li>
+                        <li><%= link_to "Wyloguj się", destroy_user_session_path, method: :delete %></li>
+                      </ul>
+                    </li>
+                    <% else %>
+                      <li><%= link_to "Zaloguj się", sign_in_path %></li>
+                      <li><%= link_to "Zaloguj się przez Facebook'a", user_facebook_omniauth_authorize_path %></li>
+                    <% end %>
+                  </ul>
+                  <li class="cart-text nav navbar-nav navbar-right">
+                    <%= link_to cart_path do %>
+                      <span class="fa fa-shopping-cart"></span>
+                      <%= current_cart.line_items.map { |e| e.quantity }.sum %>
+                      produktów za
+                      <%= number_to_currency(current_cart.line_items.map { |e| e.full_price }.sum) %>
+                    <% end %>
+                  </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-2">
+              <% if [params[:controller]] == ["users"] %>
+                <h3>Twoje Konto</h3>
+                <ul class="nav nav-sidebar">
+                  <li <% if [params[:controller], params[:action]] == ['users', 'show'] %> class="active"<% end %>>
+                    <%= link_to 'Zamówienia', orders_path %>
+                  </li>
+                  <li <% if [params[:controller], params[:action]] == ['users', 'settings'] %> class="active"<% end %>>
+                    <%= link_to 'Ustawienia konta', settings_path %>
+                  </li>
+                  <li <% if [params[:controller], params[:action]] == ['users', 'address'] %> class="active"<% end %>>
+                    <%= link_to 'Adres dostawy', address_path %>
+                  </li>
+                </ul>
+              <% else %>
+                <h3>Kategorie</h3>
+                <ul class="nav nav-sidebar">
+                  <% Category.all.each do |category| %>
+                  <li <% if @category == category %> class="active"<% end %>>
+                    <%= link_to category.name, category_path(category) %>
+                  </li>
+                  <% end %>
+                </ul>
+              <% end %>
+            </div>
+            <div class="col-md-10">
+              <div class="add-alert">
+                <%= bootstrap_flash %>
+              </div>
+                <%= yield %>
+            </div>
+          </div>
+        </div>
+    </body>
+</html>

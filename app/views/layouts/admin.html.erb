@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Buzz shop - Admin Panel</title>
+    <%= stylesheet_link_tag 'application', media:  'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="<%= admin_root_path %>">Buzz Shop::Admin</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li <% if params[:controller] == "admin/products"%>class="active"<% end %>><%= link_to "Produkty", admin_products_path %></li>
+          <li <% if params[:controller] == "admin/categories"%>class="active"<% end %>><%= link_to "Kategorie", admin_categories_path %></li>
+          <li <% if params[:controller] == "admin/orders"%>class="active"<% end %>><%= link_to "Zamówienia", admin_orders_path %></li>
+          <li><%= link_to "Zadania w tle", admin_sidekiq_web_path %></li>
+          <li><%= link_to "Wyloguj się", destroy_admin_session_path, method: :delete %></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <%= bootstrap_flash %>
+      <%= yield %>
+    </div>
+  </body>
+</html>

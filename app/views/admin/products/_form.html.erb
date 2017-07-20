@@ -1,0 +1,12 @@
+<%= simple_form_for [:admin, @product] do |f| %>
+  <%= f.input :name %>
+  <%= f.input :description %>
+  <%= f.input :long_description %>
+  <%= f.input :price %>
+  <%= f.simple_fields_for :stock do |s| %>
+    <%= s.input :quantity %>
+  <% end %>
+  <%= f.association :category %>
+  <%= f.input :photo %>
+  <%= f.submit %>
+<% end %>

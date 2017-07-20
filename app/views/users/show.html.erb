@@ -1,0 +1,19 @@
+<h1>Twoje zamówienia</h1>
+<table class="table">
+  <thead>
+    <th>id</th>
+    <th>Data złożenia</th>
+    <th>Stan zamówienia</th>
+    <th>Koszt</th>
+  </thead>
+  <tbody>
+    <% @orders.each do |order| %>
+    <tr>
+      <td>#<%= order.id %></td>
+      <td><%= l order.created_at, format: :long %></td>
+      <td><%= OrderStateMachine.states_map[order.current_state] %></td>
+      <td><%= number_to_currency order.full_cost %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

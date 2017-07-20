@@ -1,0 +1,21 @@
+<%= simple_form_for(@user, :url => { :action => "update_address" }) do |f| %>
+  <%= f.simple_fields_for :address do |a| %>
+    <h2><%= a.label :address, "Adres dostawy" %></h2>
+    <%= a.input :email %>
+    <%= a.input :first_name %>
+    <%= a.input :last_name %>
+    <%= a.input :city %>
+    <%= a.input :zip_code %>
+    <%= a.input :street %>
+    <%= a.simple_fields_for :type do |b| %>
+      <h2>Adres do faktury</h2>
+      <%= b.input :email %>
+      <%= b.input :first_name %>
+      <%= b.input :last_name %>
+      <%= b.input :city %>
+      <%= b.input :zip_code %>
+      <%= b.input :street %>
+  <% end %>
+  <% end %>
+  <%= f.submit %>
+<% end %>
